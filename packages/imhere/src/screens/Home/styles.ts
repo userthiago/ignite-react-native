@@ -48,4 +48,7 @@ export const styles = StyleSheet.create({
     marginTop: 36,
     marginBottom: 42,
   },
+  participantListContainer: {
+    gap: 8,
+  },
 });
