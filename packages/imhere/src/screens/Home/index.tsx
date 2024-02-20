@@ -50,6 +50,8 @@ export function Home() {
         </TouchableOpacity>
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.participantListContainer}
         data={participantList}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -59,8 +61,6 @@ export function Home() {
             onRemove={() => handleParticipantRemove(item.id)}
           />
         )}
-        contentContainerStyle={styles.participantListContainer}
-        showsVerticalScrollIndicator={false}
         ListEmptyComponent={EmptyParticipantListText}
       />
     </View>
