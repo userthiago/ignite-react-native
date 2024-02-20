@@ -5,33 +5,45 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from "react-native";
+import uuid from "react-native-uuid";
+
 import { Participant } from "../../components/Participant";
+import { EmptyParticipantListText } from "../../components/EmptyParticipantListText";
+import { ParticipantType } from "../../types/participant-type";
 
 import { styles } from "./styles";
-import { EmptyParticipantListText } from "../../components/EmptyParticipantListText";
 
 export function Home() {
-  const [participantList, setParticipantList] = useState<
-    { id: string; name: string }[]
-  >([
-    {
-      id: "0",
-      name: "Thiago Santos",
-    },
-    {
-      id: "1",
-      name: "Naila Rocco",
-    },
-  ]);
+  const [participantName, setParticipantName] = useState("");
+  const [participantList, setParticipantList] = useState<ParticipantType[]>([]);
 
   const handleParticipantAdd = () => {
-    console.log("Participant added");
+    const newParticipant = {
+      id: uuid.v4() as string,
+      name: participantName,
+    };
+    setParticipantList((prevState) => [...prevState, newParticipant]);
+    setParticipantName("");
   };
 
-  const handleParticipantRemove = (id: string) => {
-    setParticipantList((oldParticipantList) =>
-      oldParticipantList.filter((oldParticipant) => oldParticipant.id !== id)
+  const handleParticipantRemove = (data: ParticipantType) => {
+    Alert.alert(
+      "Remove participant",
+      `Do you really want to remove ${data.name} from this event?`,
+      [
+        {
+          text: "Yes",
+          onPress: () =>
+            setParticipantList((oldParticipantList) =>
+              oldParticipantList.filter(
+                (oldParticipant) => oldParticipant.id !== data.id
+              )
+            ),
+        },
+        { text: "No", style: "cancel" },
+      ]
     );
   };
 
@@ -44,6 +56,8 @@ export function Home() {
           style={styles.input}
           placeholder="Participant name"
           placeholderTextColor="#6B6B6B"
+          value={participantName}
+          onChangeText={setParticipantName}
         />
         <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
           <Text style={styles.buttonText}>+</Text>
@@ -58,7 +72,7 @@ export function Home() {
           <Participant
             key={item.id}
             name={item.name}
-            onRemove={() => handleParticipantRemove(item.id)}
+            onRemove={() => handleParticipantRemove(item)}
           />
         )}
         ListEmptyComponent={EmptyParticipantListText}
