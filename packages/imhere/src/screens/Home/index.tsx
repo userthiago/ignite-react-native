@@ -20,12 +20,14 @@ export function Home() {
   const [participantList, setParticipantList] = useState<ParticipantType[]>([]);
 
   const handleParticipantAdd = () => {
-    const newParticipant = {
-      id: uuid.v4() as string,
-      name: participantName,
-    };
-    setParticipantList((prevState) => [...prevState, newParticipant]);
-    setParticipantName("");
+    if (participantName) {
+      const newParticipant = {
+        id: uuid.v4() as string,
+        name: participantName,
+      };
+      setParticipantList((prevState) => [...prevState, newParticipant]);
+      setParticipantName("");
+    }
   };
 
   const handleParticipantRemove = (data: ParticipantType) => {
@@ -59,7 +61,11 @@ export function Home() {
           value={participantName}
           onChangeText={setParticipantName}
         />
-        <TouchableOpacity style={styles.button} onPress={handleParticipantAdd}>
+        <TouchableOpacity
+          style={participantName === "" ? styles.buttonDisabled : styles.button}
+          onPress={handleParticipantAdd}
+          disabled={participantName === ""}
+        >
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>

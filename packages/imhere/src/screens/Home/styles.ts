@@ -40,6 +40,15 @@ export const styles = StyleSheet.create({
     height: 56,
     borderRadius: 4,
   },
+  buttonDisabled: {
+    alignItems: "center",
+    justifyContent: "center",
+
+    backgroundColor: "#6B6B6B",
+    width: 56,
+    height: 56,
+    borderRadius: 4,
+  },
   form: {
     flexDirection: "row",
     gap: 8,
