@@ -1,3 +1,4 @@
+import { FlatList } from "react-native";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
@@ -13,3 +14,7 @@ export const Title = styled.Text`
   font-size: 24px;
   font-weight: bold;
 `;
+
+export const GroupList = styled.FlatList`
+  width: 100%;
+` as typeof FlatList;
