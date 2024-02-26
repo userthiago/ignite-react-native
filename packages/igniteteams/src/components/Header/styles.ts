@@ -7,7 +7,6 @@ export const HeaderContainer = styled.View`
   justify-content: center;
 
   width: "100%";
-  padding-top: 40px;
 `;
 
 export const Logo = styled.Image`
