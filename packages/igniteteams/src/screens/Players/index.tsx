@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Alert, FlatList } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Alert, FlatList, TextInput } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { Header } from "@components/Header";
@@ -27,6 +27,7 @@ type RouteParams = {
 const DEFAULT_TEAMS = ["Time A", "Time B"];
 
 export function Players() {
+  const newPlayerNameInputRef = useRef<TextInput>();
   const [newPlayerName, setNewPlayerName] = useState("");
   const [team, setTeam] = useState(DEFAULT_TEAMS[0]);
   const [groupData, setGroupData] = useState<GroupStorageDTO | undefined>();
@@ -56,6 +57,8 @@ export function Players() {
 
     try {
       await playerAddByGroup(newPlayer, groupData.id);
+      newPlayerNameInputRef.current?.blur();
+      setNewPlayerName("");
       fetchPlayersByTeam();
     } catch (error) {
       if (error instanceof AppError) {
@@ -164,6 +167,10 @@ export function Players() {
           placeholder="Nome do participante"
           autoCorrect={false}
           onChangeText={handleChangeNewPlayerName}
+          inputRef={newPlayerNameInputRef}
+          value={newPlayerName}
+          onSubmitEditing={handleAddPlayer}
+          returnKeyType="done"
         />
         <ButtonIcon icon="add" onPress={handleAddPlayer} />
       </Form>
