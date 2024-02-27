@@ -1,16 +1,18 @@
+import uuid from "react-native-uuid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PlayerStorageDTO } from "./player-storage-dto";
-import { PLAYER_COLLECTION } from "@storage/storage-config";
-import { playersGetByGroup } from "./players-get-by-group";
+
 import { AppError } from "@utils/app-error";
+import { PLAYER_COLLECTION } from "@storage/storage-config";
+import { PlayerStorageDTO } from "./player-storage-dto";
+import { playersGetByGroup } from "./players-get-by-group";
 
 export async function playerAddByGroup(
-  newPlayer: PlayerStorageDTO,
+  newPlayer: Omit<PlayerStorageDTO, "id">,
   groupId: string
 ) {
   try {
     const storedPlayers = await playersGetByGroup(groupId);
-    const playerAlreadyExists = storedPlayers.filter(
+    const playerAlreadyExists = storedPlayers.find(
       (player) => player.name.toLowerCase() === newPlayer.name.toLowerCase()
     );
 
@@ -18,7 +20,12 @@ export async function playerAddByGroup(
       throw new AppError("Essa pessoa já está adicionada em um time.");
     }
 
-    const storage = JSON.stringify([...storedPlayers, newPlayer]);
+    const playerData: PlayerStorageDTO = {
+      id: uuid.v4() as string,
+      ...newPlayer,
+    };
+
+    const storage = JSON.stringify([...storedPlayers, playerData]);
 
     await AsyncStorage.setItem(`${PLAYER_COLLECTION}-${groupId}`, storage);
   } catch (error) {

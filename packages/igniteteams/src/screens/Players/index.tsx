@@ -11,26 +11,77 @@ import { PlayerCard } from "@components/PlayerCard";
 import { Button } from "@components/Button";
 import { ListEmpty } from "@components/ListEmpty";
 
-import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
+import { AppError } from "@utils/app-error";
 import { GroupStorageDTO } from "@storage/group/group-storage-dto";
 import { groupGetById } from "@storage/group/group-get-by-id";
-import { AppError } from "@utils/app-error";
+import { PlayerStorageDTO } from "@storage/player/player-storage-dto";
+import { playerAddByGroup } from "@storage/player/player-add-by-group";
+import { playerGetByGroupAndTeam } from "@storage/player/player-get-by-group-and-team";
+
+import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
 
 type RouteParams = {
   groupId: string;
 };
 
+const DEFAULT_TEAMS = ["Time A", "Time B"];
+
 export function Players() {
-  const [team, setTeam] = useState("Time A");
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [team, setTeam] = useState(DEFAULT_TEAMS[0]);
   const [groupData, setGroupData] = useState<GroupStorageDTO | undefined>();
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
   const navigation = useNavigation();
 
   const route = useRoute();
   const { groupId } = route.params as RouteParams;
 
+  const handleChangeNewPlayerName = (name: string) => {
+    setNewPlayerName(name);
+  };
+
+  const handleAddPlayer = async () => {
+    const name = newPlayerName.trim();
+    if (name.length === 0) {
+      return Alert.alert(
+        "Novo Participante",
+        "Informe o nome do participante para adicionar."
+      );
+    }
+
+    const newPlayer: Omit<PlayerStorageDTO, "id"> = {
+      name: name,
+      teamId: team,
+    };
+
+    try {
+      await playerAddByGroup(newPlayer, groupData.id);
+      fetchPlayersByTeam();
+    } catch (error) {
+      if (error instanceof AppError) {
+        Alert.alert("Novo Participante", error.message);
+      } else {
+        console.log(error);
+        Alert.alert("Novo Participante", "Não foi possível adicionar.");
+      }
+    }
+  };
+
   const handleChangeTeam = (team: string) => {
     setTeam(team);
+  };
+
+  const fetchPlayersByTeam = async () => {
+    try {
+      const playersByTeam = await playerGetByGroupAndTeam(groupId, team);
+      setPlayers(playersByTeam);
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        "Participantes",
+        "Não foi possível carregar os participantes do time selecionado."
+      );
+    }
   };
 
   const fetchGroupData = async () => {
@@ -38,7 +89,7 @@ export function Players() {
       const storedGroup = await groupGetById(groupId);
 
       if (!storedGroup) {
-        Alert.alert(
+        return Alert.alert(
           "Dados da Turma",
           "Não foi encontrado os dados referente a esta turma.",
           [
@@ -51,7 +102,7 @@ export function Players() {
           ]
         );
       } else {
-        setGroupData(storedGroup);
+        return setGroupData(storedGroup);
       }
     } catch (error) {
       if (error instanceof AppError) {
@@ -65,6 +116,18 @@ export function Players() {
         ]);
       } else {
         console.log(error);
+        Alert.alert(
+          "Dados da Turma",
+          "Não foi possível buscar os dados da turma.",
+          [
+            {
+              text: "Entendi",
+              onPress: () => {
+                navigation.navigate("groups");
+              },
+            },
+          ]
+        );
       }
     }
   };
@@ -72,6 +135,10 @@ export function Players() {
   useEffect(() => {
     fetchGroupData();
   }, []);
+
+  useEffect(() => {
+    fetchPlayersByTeam();
+  }, [team]);
 
   if (groupData === undefined) {
     return (
@@ -93,12 +160,16 @@ export function Players() {
         subtitle="adicione a galera e separe os times"
       />
       <Form>
-        <Input placeholder="Nome do participante" autoCorrect={false} />
-        <ButtonIcon icon="add" />
+        <Input
+          placeholder="Nome do participante"
+          autoCorrect={false}
+          onChangeText={handleChangeNewPlayerName}
+        />
+        <ButtonIcon icon="add" onPress={handleAddPlayer} />
       </Form>
       <HeaderList>
         <FlatList
-          data={["Time A", "Time B"]}
+          data={DEFAULT_TEAMS}
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <Filter
@@ -113,9 +184,9 @@ export function Players() {
       </HeaderList>
       <FlatList
         data={players}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <PlayerCard name={item} onRemove={() => {}} />
+          <PlayerCard name={item.name} onRemove={() => {}} />
         )}
         showsVerticalScrollIndicator={false}
         scrollEnabled={players.length > 0}
