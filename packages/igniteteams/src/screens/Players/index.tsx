@@ -20,6 +20,7 @@ import { playerGetByGroupAndTeam } from "@storage/player/player-get-by-group-and
 
 import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
 import { playerRemoveByGroup } from "@storage/player/player-remove-by-group";
+import { groupRemoveById } from "@storage/group/group-remove-by-id";
 
 type RouteParams = {
   groupId: string;
@@ -149,6 +150,29 @@ export function Players() {
     }
   };
 
+  const groupRemove = async () => {
+    try {
+      await groupRemoveById(groupId);
+      navigation.navigate("groups");
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Remover Turma", "Não foi possível remover a turma.");
+    }
+  };
+
+  const handleGroupRemove = async () => {
+    Alert.alert("Remover Turma", "Deseja continuar com a remoção da turma?", [
+      {
+        text: "Não",
+        style: "cancel",
+      },
+      {
+        text: "Sim",
+        onPress: () => groupRemove(),
+      },
+    ]);
+  };
+
   useEffect(() => {
     fetchGroupData();
   }, []);
@@ -222,7 +246,11 @@ export function Players() {
           <ListEmpty message="Não há pessoas nesse time." />
         )}
       />
-      <Button title="Remover turma" type="SECONDARY" />
+      <Button
+        title="Remover turma"
+        type="SECONDARY"
+        onPress={handleGroupRemove}
+      />
     </PlayersContainer>
   );
 }
