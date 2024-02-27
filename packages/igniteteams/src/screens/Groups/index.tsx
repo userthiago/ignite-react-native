@@ -8,11 +8,13 @@ import { GroupCard } from "@components/GroupCard";
 import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
 
-import { Container } from "./styles";
 import { groupsGetAll } from "@storage/group/groups-get-all";
+import { Group } from "src/@types/group";
+
+import { Container } from "./styles";
 
 export function Groups() {
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const navigation = useNavigation();
 
   const handleNewGroup = () => {
@@ -44,9 +46,12 @@ export function Groups() {
       <Highlight title="Turmas" subtitle="jogue com a sua turma" />
       <FlatList
         data={groups}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <GroupCard title={item} onPress={() => handleOpenGroup(item)} />
+          <GroupCard
+            title={item.name}
+            onPress={() => handleOpenGroup(item.id)}
+          />
         )}
         scrollEnabled={groups.length > 0}
         contentContainerStyle={groups.length === 0 && { flex: 1 }}
