@@ -1,4 +1,4 @@
-export type Group = {
+export type GroupStorageDTO = {
   id: string;
   name: string;
 };

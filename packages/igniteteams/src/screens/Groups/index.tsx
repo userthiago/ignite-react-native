@@ -9,12 +9,12 @@ import { ListEmpty } from "@components/ListEmpty";
 import { Button } from "@components/Button";
 
 import { groupsGetAll } from "@storage/group/groups-get-all";
-import { Group } from "src/@types/group";
+import { GroupStorageDTO } from "@storage/group/group-storage-dto";
 
 import { Container } from "./styles";
 
 export function Groups() {
-  const [groups, setGroups] = useState<Group[]>([]);
+  const [groups, setGroups] = useState<GroupStorageDTO[]>([]);
   const navigation = useNavigation();
 
   const handleNewGroup = () => {
@@ -30,8 +30,8 @@ export function Groups() {
     }
   }
 
-  function handleOpenGroup(group: string) {
-    navigation.navigate("players", { group });
+  function handleOpenGroup(groupId: string) {
+    navigation.navigate("players", { groupId });
   }
 
   useFocusEffect(
