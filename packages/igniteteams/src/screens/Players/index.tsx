@@ -17,10 +17,10 @@ import { groupGetById } from "@storage/group/group-get-by-id";
 import { PlayerStorageDTO } from "@storage/player/player-storage-dto";
 import { playerAddByGroup } from "@storage/player/player-add-by-group";
 import { playerGetByGroupAndTeam } from "@storage/player/player-get-by-group-and-team";
-
-import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
 import { playerRemoveByGroup } from "@storage/player/player-remove-by-group";
 import { groupRemoveById } from "@storage/group/group-remove-by-id";
+
+import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
 
 type RouteParams = {
   groupId: string;
