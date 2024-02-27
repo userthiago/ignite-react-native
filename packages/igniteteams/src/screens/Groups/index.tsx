@@ -12,8 +12,10 @@ import { groupsGetAll } from "@storage/group/groups-get-all";
 import { GroupStorageDTO } from "@storage/group/group-storage-dto";
 
 import { Container } from "./styles";
+import { Loading } from "@components/Loading";
 
 export function Groups() {
+  const [isLoading, setLoading] = useState(true);
   const [groups, setGroups] = useState<GroupStorageDTO[]>([]);
   const navigation = useNavigation();
 
@@ -23,11 +25,14 @@ export function Groups() {
 
   async function fetchGroups() {
     try {
+      setLoading(true);
       const data = await groupsGetAll();
       setGroups(data);
     } catch (error) {
       console.log(error);
       Alert.alert("Turmas", "Não foi possível carregar as turmas.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -45,22 +50,27 @@ export function Groups() {
     <Container>
       <Header />
       <Highlight title="Turmas" subtitle="jogue com a sua turma" />
-      <FlatList
-        data={groups}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <GroupCard
-            title={item.name}
-            onPress={() => handleOpenGroup(item.id)}
-          />
-        )}
-        scrollEnabled={groups.length > 0}
-        contentContainerStyle={groups.length === 0 && { flex: 1 }}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => (
-          <ListEmpty message="Que tal cadastrar a primeira turma?" />
-        )}
-      />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={groups}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <GroupCard
+              title={item.name}
+              onPress={() => handleOpenGroup(item.id)}
+            />
+          )}
+          scrollEnabled={groups.length > 0}
+          contentContainerStyle={groups.length === 0 && { flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => (
+            <ListEmpty message="Que tal cadastrar a primeira turma?" />
+          )}
+        />
+      )}
+
       <Button title="Criar nova turma" onPress={handleNewGroup} />
     </Container>
   );

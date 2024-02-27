@@ -21,6 +21,7 @@ import { playerRemoveByGroup } from "@storage/player/player-remove-by-group";
 import { groupRemoveById } from "@storage/group/group-remove-by-id";
 
 import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
+import { Loading } from "@components/Loading";
 
 type RouteParams = {
   groupId: string;
@@ -30,6 +31,7 @@ const DEFAULT_TEAMS = ["Time A", "Time B"];
 
 export function Players() {
   const newPlayerNameInputRef = useRef<TextInput>();
+  const [isLoading, setIsLoading] = useState(true);
   const [newPlayerName, setNewPlayerName] = useState("");
   const [team, setTeam] = useState(DEFAULT_TEAMS[0]);
   const [groupData, setGroupData] = useState<GroupStorageDTO | undefined>();
@@ -78,6 +80,7 @@ export function Players() {
 
   const fetchPlayersByTeam = async () => {
     try {
+      setIsLoading(true);
       const playersByTeam = await playerGetByGroupAndTeam(groupId, team);
       setPlayers(playersByTeam);
     } catch (error) {
@@ -86,15 +89,18 @@ export function Players() {
         "Participantes",
         "Não foi possível carregar os participantes do time selecionado."
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchGroupData = async () => {
     try {
+      setIsLoading(true);
       const storedGroup = await groupGetById(groupId);
 
       if (!storedGroup) {
-        return Alert.alert(
+        Alert.alert(
           "Dados da Turma",
           "Não foi encontrado os dados referente a esta turma.",
           [
@@ -107,7 +113,8 @@ export function Players() {
           ]
         );
       } else {
-        return setGroupData(storedGroup);
+        setGroupData(storedGroup);
+        setIsLoading(false);
       }
     } catch (error) {
       if (error instanceof AppError) {
@@ -181,7 +188,7 @@ export function Players() {
     fetchPlayersByTeam();
   }, [team]);
 
-  if (groupData === undefined) {
+  if (isLoading) {
     return (
       <PlayersContainer>
         <Header showBackButton />
@@ -189,6 +196,7 @@ export function Players() {
           title="Aguarde"
           subtitle="estamos carregando as informações da turma!"
         />
+        <Loading />
       </PlayersContainer>
     );
   }
