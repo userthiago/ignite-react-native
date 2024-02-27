@@ -19,6 +19,7 @@ import { playerAddByGroup } from "@storage/player/player-add-by-group";
 import { playerGetByGroupAndTeam } from "@storage/player/player-get-by-group-and-team";
 
 import { Form, HeaderList, PlayersAmount, PlayersContainer } from "./styles";
+import { playerRemoveByGroup } from "@storage/player/player-remove-by-group";
 
 type RouteParams = {
   groupId: string;
@@ -135,6 +136,19 @@ export function Players() {
     }
   };
 
+  const handlePlayerRemove = async (playerId: string) => {
+    try {
+      await playerRemoveByGroup(playerId, groupData.id);
+      fetchPlayersByTeam();
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        "Remover Participante",
+        "Não foi possível remover o participante selecionado."
+      );
+    }
+  };
+
   useEffect(() => {
     fetchGroupData();
   }, []);
@@ -193,7 +207,10 @@ export function Players() {
         data={players}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <PlayerCard name={item.name} onRemove={() => {}} />
+          <PlayerCard
+            name={item.name}
+            onRemove={() => handlePlayerRemove(item.id)}
+          />
         )}
         showsVerticalScrollIndicator={false}
         scrollEnabled={players.length > 0}
