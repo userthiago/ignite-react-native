@@ -7,6 +7,7 @@ import {
 import { GluestackUIProvider, Text, Box } from "@gluestack-ui/themed";
 import { Loading } from "@components/Loading";
 import { config } from "config/gluestack-ui.config";
+import { SignIn } from "@screens/Signin";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
@@ -18,13 +19,7 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      {!fontsLoaded ? (
-        <Box>
-          <Text>Open up App.js to start working on your app!</Text>
-        </Box>
-      ) : (
-        <Loading />
-      )}
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </GluestackUIProvider>
   );
 }
