@@ -11,6 +11,7 @@ export function Input({ ...rest }: TextInputProps) {
       borderWidth={1}
       borderColor="$gray700"
       mb="$4"
+      rounded="$md"
       $focus-backgroundColor="$gray700"
       $focus-borderWidth={1}
       $focus-borderColor="$green500"
