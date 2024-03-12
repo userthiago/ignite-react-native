@@ -1,10 +1,20 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { Box, useStyled } from "@gluestack-ui/themed";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+
 import { AuthRoutes } from "./auth.routes";
 
 export function Routes() {
+  const styled = useStyled();
+
+  const theme = DefaultTheme;
+
+  theme.colors.background = styled.config.tokens.colors.gray700;
+
   return (
-    <NavigationContainer>
-      <AuthRoutes />
-    </NavigationContainer>
+    <Box flex={1} bg="$gray700">
+      <NavigationContainer theme={theme}>
+        <AuthRoutes />
+      </NavigationContainer>
+    </Box>
   );
 }
