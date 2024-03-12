@@ -1,5 +1,5 @@
-import { ButtonText, Button as GluestackButton } from "@gluestack-ui/themed";
 import { ComponentProps } from "react";
+import { ButtonText, Button as GluestackButton } from "@gluestack-ui/themed";
 
 type ButtonProps = ComponentProps<typeof GluestackButton> & {
   title: string;

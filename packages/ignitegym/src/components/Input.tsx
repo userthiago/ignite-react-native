@@ -1,5 +1,5 @@
-import { InputField, Input as GluestackInput } from "@gluestack-ui/themed";
 import { TextInputProps } from "react-native";
+import { InputField, Input as GluestackInput } from "@gluestack-ui/themed";
 
 export function Input({ ...rest }: TextInputProps) {
   return (

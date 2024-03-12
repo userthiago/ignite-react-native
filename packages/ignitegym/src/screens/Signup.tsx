@@ -7,10 +7,11 @@ import {
   ScrollView,
 } from "@gluestack-ui/themed";
 
-import LogoSvg from "@assets/logo.svg";
-import BackgroundImg from "@assets/background.png";
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+
+import LogoSvg from "@assets/logo.svg";
+import BackgroundImg from "@assets/background.png";
 
 export function SignUp() {
   return (
