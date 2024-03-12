@@ -6,6 +6,7 @@ import {
   VStack,
   ScrollView,
 } from "@gluestack-ui/themed";
+import { useNavigation } from "@react-navigation/native";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
@@ -14,6 +15,12 @@ import LogoSvg from "@assets/logo.svg";
 import BackgroundImg from "@assets/background.png";
 
 export function SignUp() {
+  const navigation = useNavigation();
+
+  function handleGoBack() {
+    navigation.goBack();
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
@@ -49,7 +56,12 @@ export function SignUp() {
           <Input placeholder="Senha" secureTextEntry />
           <Button title="Criar e acessar" />
         </Center>
-        <Button title="Voltar ao login" variant="outline" mt="$24" />
+        <Button
+          title="Voltar ao login"
+          variant="outline"
+          mt="$24"
+          onPress={handleGoBack}
+        />
       </VStack>
     </ScrollView>
   );
