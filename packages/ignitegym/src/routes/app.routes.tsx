@@ -1,3 +1,4 @@
+import { useStyled } from "@gluestack-style/react";
 import {
   BottomTabNavigationProp,
   createBottomTabNavigator,
@@ -11,7 +12,7 @@ import { Exercise } from "@screens/Exercise";
 import HomeSvg from "@assets/home.svg";
 import HistorySvg from "@assets/history.svg";
 import ProfileSvg from "@assets/profile.svg";
-import { useStyled } from "@gluestack-style/react";
+import { Platform } from "react-native";
 
 type AppRoutes = {
   home: undefined;
@@ -25,12 +26,28 @@ export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
 export function AppRoutes() {
-  const { config } = useStyled();
+  const {
+    config: { tokens },
+  } = useStyled();
 
-  const iconSize = config.tokens.space["6"];
+  const iconSize = tokens.space["6"];
 
   return (
-    <Navigator screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: tokens.colors.green500,
+        tabBarInactiveTintColor: tokens.colors.gray200,
+        tabBarStyle: {
+          backgroundColor: tokens.colors.gray600,
+          borderTopWidth: 0,
+          height: Platform.OS === "android" ? "auto" : 96,
+          paddingBottom: tokens.space["10"],
+          paddingTop: tokens.space["8"],
+        },
+      }}
+    >
       <Screen
         name="home"
         component={Home}
@@ -58,7 +75,11 @@ export function AppRoutes() {
           ),
         }}
       />
-      <Screen name="exercise" component={Exercise} />
+      <Screen
+        name="exercise"
+        component={Exercise}
+        options={{ tabBarButton: () => null }}
+      />
     </Navigator>
   );
 }
