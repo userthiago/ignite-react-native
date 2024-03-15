@@ -1,11 +1,25 @@
 import { InputField, Input as GluestackInput } from "@gluestack-ui/themed";
 import { ComponentProps } from "react";
 
+type InputProps = ComponentProps<typeof InputField> & {
+  isInvalid?: boolean;
+  isDisabled?: boolean;
+  isHovered?: boolean;
+  isFocused?: boolean;
+  isRequired?: boolean;
+  isReadOnly?: boolean;
+};
+
 export function Input({
   bg = "$gray700",
-  states,
+  isInvalid,
+  isDisabled,
+  isHovered,
+  isFocused,
+  isRequired,
+  isReadOnly,
   ...rest
-}: ComponentProps<typeof InputField>) {
+}: InputProps) {
   return (
     <GluestackInput
       bg={bg}
@@ -19,14 +33,18 @@ export function Input({
       $focus-backgroundColor="$gray700"
       $focus-borderWidth={1}
       $focus-borderColor="$green500"
-      states={states}
+      isInvalid={isInvalid}
+      isDisabled={isDisabled}
+      isHovered={isHovered}
+      isFocused={isFocused}
+      isRequired={isRequired}
+      isReadOnly={isReadOnly}
     >
       <InputField
         fontSize="$md"
         color="$white"
         fontFamily="$body"
         placeholderTextColor="$gray300"
-        states={states}
         {...rest}
       />
     </GluestackInput>

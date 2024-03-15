@@ -5,6 +5,8 @@ import {
   Roboto_700Bold,
 } from "@expo-google-fonts/roboto";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
+import "react-native-reanimated";
+import "react-native-gesture-handler";
 
 import { Loading } from "@components/Loading";
 import { Routes } from "@routes/index";

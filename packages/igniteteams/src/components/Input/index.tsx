@@ -6,6 +6,7 @@ import { InputContainer } from "./styles";
 type InputProps = TextInputProps & {
   inputRef?: React.RefObject<TextInput>;
 };
+
 export function Input({ inputRef, ...rest }: InputProps) {
   const { COLORS } = useTheme();
 
