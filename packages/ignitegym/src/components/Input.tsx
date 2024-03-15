@@ -1,10 +1,14 @@
-import { TextInputProps } from "react-native";
 import { InputField, Input as GluestackInput } from "@gluestack-ui/themed";
+import { ComponentProps } from "react";
 
-export function Input({ ...rest }: TextInputProps) {
+export function Input({
+  bg = "$gray700",
+  states,
+  ...rest
+}: ComponentProps<typeof InputField>) {
   return (
     <GluestackInput
-      bg="$gray700"
+      bg={bg}
       w="$full"
       h="$14"
       px="$3"
@@ -15,12 +19,14 @@ export function Input({ ...rest }: TextInputProps) {
       $focus-backgroundColor="$gray700"
       $focus-borderWidth={1}
       $focus-borderColor="$green500"
+      states={states}
     >
       <InputField
         fontSize="$md"
         color="$white"
         fontFamily="$body"
         placeholderTextColor="$gray300"
+        states={states}
         {...rest}
       />
     </GluestackInput>
